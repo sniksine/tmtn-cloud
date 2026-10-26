@@ -105,9 +105,24 @@ function connect() {
   ws.onclose = () => setTimeout(connect, 1000);
   ws.onmessage = (e) => onMsg(JSON.parse(e.data));
 }
+// 云端版：实时推送（WebSocket）连不上或卡住时，改为每 3 秒拉一次 /api/state，保证列表和状态照样刷新
+setInterval(async () => {
+  if (!S.tokens?.size && !S.lastTick) return;
+  if (Date.now() - (S.lastTick || 0) < 6000) return;
+  S.wsDown = true;
+  try {
+    const st = await api('/api/state');
+    if (Date.now() - (S.lastTick || 0) < 6000) return;
+    Object.assign(S, { mode: st.mode, baw: st.baw, block: st.block, bnbUsd: st.bnbUsd, net: st.net, wallets: st.wallets, usage: st.usage, positions: st.positions });
+    S.tokens = new Map(st.tokens.map((t) => [t.address, t]));
+    scheduleRender();
+  } catch { /* 下次再试 */ }
+  if (ws && ws.readyState !== 0 && ws.readyState !== 1) connect();
+}, 3000);
 function onMsg({ type, data, full }) {
   switch (type) {
     case 'tick':
+      S.lastTick = Date.now(); S.wsDown = false;
       Object.assign(S, { mode: data.mode, baw: data.baw, block: data.block, bnbUsd: data.bnbUsd, net: data.net, wallets: data.wallets, usage: data.usage, positions: data.positions, claimable: data.claimable || [] });
       S.tokens = new Map(data.tokens.map((t) => [t.address, t]));
       if (!S.selected) pickDefault();
@@ -394,7 +409,7 @@ function renderStatus() {
     <div class="l1"><span class="muted">${S.platform === 'four' ? 'Agent 专属' : S.platform === 'gang' ? 'Gang' : 'Agent 曲线'} <b class="mono" style="color:var(--text)">${n}</b></span>
       ${LIVE() ? `<span class="muted">${S.baw?.connected ? '<b class="g">baw 已连接</b>' : '<b class="r">baw 未连接</b>'} · 白名单以合约为准</span>` : S.platform === 'four' ? `<b class="${w.agentId ? 'g' : 'r'}">Agent ID ${w.agentId ? '✓' : '✗'}</b><b class="${el.ok ? 'g' : 'r'}">${el.ok ? '已在白名单' : el.why}</b>` : '<b class="g">无需白名单</b>'}</div>
     ${LIVE() ? `<div class="l2" style="text-align:left;color:var(--muted)">Reader ${S.net.curve?.connected ? `<span class="g">✓ ${S.net.curve.total} 个市场</span>` : `<span class="r">✗ ${esc(S.net.curve?.lastError || '连接中')}</span>`} · Four ${S.net.four?.connected ? `<span class="g">✓ ${S.net.four.total}</span>` : `<span class="r">${S.net.four?.lastError ? '✗' : '回补中…'}</span>`} · Gang ${S.net.gang?.connected ? `<span class="g">✓ ${S.net.gang.total}</span>` : `<span class="r">${S.net.gang?.lastError ? '✗' : '连接中…'}</span>`} · shrine ${S.net.shrine?.launch?.connected ? '<span class="g">✓</span>' : '<span class="r">✗</span>'} · baw ${S.baw?.connected ? '<span class="g">✓</span>' : '<span class="r">✗</span>'}</div>` : ''}
-    <div class="l2"><span class="spin">⟳</span> 链上检测中 · ${ago < 5 ? '刚刚' : Math.floor(ago) + 's 前'} · ${S.net.detect || 0}ms</div>`;
+    <div class="l2"><span class="spin">⟳</span> 链上检测中 · 上一个新盘 ${ago < 5 ? '刚刚' : ago < 120 ? Math.floor(ago) + 's 前' : Math.floor(ago / 60) + ' 分钟前'} · 检测耗时 ${S.net.detect || 0}ms${S.wsDown ? ' · <span class="y">实时推送断开，已改为每 3 秒刷新</span>' : ''}</div>`;
 }
 
 /* ---------- 中栏：头部 ---------- */
@@ -1648,7 +1663,7 @@ document.addEventListener('click', (e) => {
   const st = await api('/api/state');
   if (st.holdings) setHoldSnap(st.holdings);
   Object.assign(S, { mode: st.mode, baw: st.baw, block: st.block, bnbUsd: st.bnbUsd, net: st.net, wallets: st.wallets, settings: st.settings, config: st.config, usage: st.usage, positions: st.positions, orders: st.orders, logs: st.logs, records: st.records, flow: st.flow, snipeCurve: st.snipeCurve });
-  S.tokens = new Map(st.tokens.map((t) => [t.address, t]));
+  S.tokens = new Map(st.tokens.map((t) => [t.address, t])); S.lastTick = Date.now();
   S.selWallets = new Set(S.wallets.map((w) => w.id)); S.activeWallet = S.wallets[0]?.id || S.activeWallet;
   if (LIVE()) S.platform = 'flap';
   const prefs = loadPrefs(); S.prefSel = prefs.selected || null;
