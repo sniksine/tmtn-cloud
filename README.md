@@ -27,6 +27,23 @@
 
 其余代码与上游一致。
 
+## 免费运行：GitHub Codespaces（推荐自己用）
+
+GitHub 个人账号每月免费约 60 小时（2 核机器），不用绑卡。适合**想交易时打开用一阵**，不适合 24 小时给别人用。
+
+1. 手机或电脑浏览器打开本仓库页面 → 绿色 **Code** 按钮 → **Codespaces** 标签 → **Create codespace on main**。
+2. 等 2–3 分钟（首次会自动安装依赖并启动终端）。
+3. 底部打开 **端口 / Ports** 面板 → 3000 端口那一行点 🌐 地球图标，就会在新标签页打开 TMTN。
+   - 端口默认是 **Private**：只有登录了你 GitHub 账号的浏览器能打开，别人拿到网址也进不来。**不要改成 Public。**
+4. 勾选风险提示 → 进入终端 → 点登录 → 在币安 App 里核对配对码并确认。
+5. 用完就停机省时长：github.com/codespaces → 这个 codespace 右边 ⋯ → **Stop codespace**。
+   - 没操作最多约 4 小时会自动停机（可在 github.com/settings/codespaces 把 Default idle timeout 调到 240 分钟）。
+   - 停机后文件保留，下次在 github.com/codespaces 里点它重新打开，终端会自动启动，钱包一般不用重新登录。
+   - **不要点 Delete**，删除会清掉登录和持仓记录。
+6. 网址打不开时：在 codespace 的 Terminal 里运行 `bash .devcontainer/start.sh`，或看日志 `tail -n 50 /tmp/tmtn-gateway.log`。
+
+注意：停机期间自动领取、自动转出都不会运行。
+
 ## 部署到 Railway
 
 1. 把本目录全部文件推到你自己的 GitHub 仓库（不要提交 `node_modules`、`data`、`.env`）。
