@@ -286,17 +286,20 @@ function renderAuth() {
   // 云端版：登录在页面上完成（每位访客的 baw 会话在服务器上各自独立，不能用终端里的 baw auth signin）
   $('#loginBody').innerHTML = (L?.state === 'waiting' && Date.now() < (L.expireAt || 0))
     ? `<li>配对码：<b class="mono" style="font-size:20px;letter-spacing:2px">${esc(L.pairingCode || '—')}</b></li>`
-      + (L.urlForWeb ? `<li><a href="${esc(L.urlForWeb)}" target="_blank" rel="noopener" style="color:#f0b90b;text-decoration:underline">点这里打开币安确认页</a>，在<b>币安 App</b> 里核对上面的配对码并确认登录</li>` : `<li>在<b>币安 App</b> 里核对上面的配对码并确认登录</li>`)
+      + (L.urlForWeb ? `<li>用<b>币安 App</b> 扫下面的二维码：<br><img alt="登录二维码" src="${qrData(L.urlForWeb)}" style="width:200px;height:200px;background:#fff;padding:8px;border-radius:8px;margin:8px 0;display:block"><span class="muted">同一部手机上：先截图这个二维码 → 打开币安 App → 点扫一扫 → 右上角「相册」→ 选这张截图。</span><br><a href="${esc(L.urlForWeb)}" target="_blank" rel="noopener" style="color:#f0b90b;text-decoration:underline">或点这里直接跳转币安 App</a></li><li>在币安 App 里核对配对码一致，然后确认登录</li>` : `<li>在<b>币安 App</b> 里核对上面的配对码并确认登录</li>`)
       + `<li>确认后这里会自动进入（每 10 秒检测一次，也可以点「我已确认，重新检测」）</li>`
     : `<li>点下面「登录币安钱包」，页面会显示配对码和确认链接</li><li>在<b>币安 App</b> 中核对配对码并确认登录</li><li>不需要也不要输入任何私钥或助记词</li>`
       + (L?.state === 'failed' ? `<li class="r">上次登录没成功：${esc(L.message || '')}，请再点一次登录</li>` : '');
+  { const g = $('#loginGo'); if (g && !g.disabled) g.textContent = (L?.state === 'waiting' && Date.now() < (L.expireAt || 0)) ? `配对码 5 分钟内有效，过期后点这里换新的` : '登录币安钱包'; }
   $('#loginNote').textContent = a.state === 'error' ? `检测出错：${a.message || ''}` : a.message || '';
 }
+// 登录二维码（本地生成，不经过第三方）
+function qrData(text) { try { const q = window.qrcode(0, 'M'); q.addData(text); q.make(); return q.createDataURL(6, 2); } catch { return ''; } }
 async function startLogin() {
   const btn = $('#loginGo'); btn.disabled = true; btn.textContent = '正在获取登录二维码…';
   try { const r = await api('/api/auth/login', {}); if (r && S.baw) S.baw.login = r; if (r?.state === 'done') { const c = await api('/api/auth/check', {}); if (c && S.baw) S.baw.auth = c; } }
   catch (e) { if (S.baw) S.baw.login = { state: 'failed', message: e.message }; }
-  btn.disabled = false; btn.textContent = '重新获取配对码'; $('#loginModal').dataset.k = ''; renderAuth();
+  btn.disabled = false; $('#loginModal').dataset.k = ''; renderAuth();
 }
 $('#loginGo')?.addEventListener('click', startLogin);   // 页面上不再提供登录按钮（登录命令在终端运行）
 $('#loginModal').addEventListener('click', async (e) => { const b = e.target.closest('[data-agcopy]'); if (!b) return; try { await navigator.clipboard.writeText(b.dataset.agcopy); b.textContent = '已复制'; } catch { b.textContent = '请手动复制'; } setTimeout(() => (b.textContent = '复制'), 1500); });
