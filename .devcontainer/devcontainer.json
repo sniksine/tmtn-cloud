@@ -1,0 +1,20 @@
+{
+  "name": "TMTN Cloud",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "hostRequirements": { "cpus": 2 },
+  "containerEnv": {
+    "DATA_DIR": "${containerWorkspaceFolder}/data",
+    "PORT": "3000",
+    "MAX_PROCS": "3",
+    "IDLE_MIN": "240",
+    "LIVE_TRADE": "1",
+    "MAX_TRADE_BNB": "0.5"
+  },
+  "postCreateCommand": "npm ci --omit=dev --no-audit --no-fund",
+  "postStartCommand": "bash .devcontainer/start.sh",
+  "postAttachCommand": "bash .devcontainer/start.sh",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "TMTN 终端", "onAutoForward": "openBrowser" }
+  }
+}
