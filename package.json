@@ -1,0 +1,18 @@
+{
+  "name": "tmtn-cloud",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TMTN 多用户云端版：每位访客一个独立的 TMTN 实盘进程 + 独立的币安 Agentic Wallet 会话",
+  "main": "gateway.js",
+  "scripts": { "start": "node gateway.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@binance/agentic-wallet": "^1.12.0",
+    "ethers": "6.17.0",
+    "express": "5.1.0",
+    "http-proxy": "^1.18.1",
+    "ws": "8.18.3"
+  },
+  "license": "MIT"
+}
