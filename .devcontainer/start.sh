@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # 启动 TMTN 网关（已在运行就跳过）。日志：/tmp/tmtn-gateway.log
 cd "$(dirname "$0")/.."
+# 自动拉取最新代码（失败不影响启动）
+git pull --ff-only -q 2>/dev/null || true
 [ -d node_modules ] || npm ci --omit=dev --no-audit --no-fund
 if curl -fsS "http://127.0.0.1:${PORT:-3000}/healthz" >/dev/null 2>&1; then
   echo "TMTN 网关已在运行：端口 ${PORT:-3000}"
