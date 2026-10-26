@@ -492,11 +492,11 @@ const chartEl = $('.chart-wrap');
 const tz = -new Date().getTimezoneOffset() * 60;   // 库按 UTC 显示时间，这里换成本地时间
 const chart = LWC.createChart(chartEl, {
   autoSize: true,
-  layout: { background: { color: 'transparent' }, textColor: '#7d8794', fontSize: 11, fontFamily: getComputedStyle(document.body).getPropertyValue('--mono') || 'monospace' },
-  grid: { vertLines: { color: '#151b22' }, horzLines: { color: '#151b22' } },
-  crosshair: { mode: LWC.CrosshairMode.Normal, vertLine: { color: '#3a4350', labelBackgroundColor: '#2b3139' }, horzLine: { color: '#3a4350', labelBackgroundColor: '#2b3139' } },
-  rightPriceScale: { borderColor: '#1e2329', scaleMargins: { top: 0.08, bottom: 0.26 } },
-  timeScale: { borderColor: '#1e2329', timeVisible: true, secondsVisible: true, rightOffset: 3, barSpacing: 6, minBarSpacing: 0.5 },
+  layout: { background: { color: 'transparent' }, textColor: '#6b7480', fontSize: 11, fontFamily: getComputedStyle(document.body).getPropertyValue('--mono') || 'monospace' },
+  grid: { vertLines: { color: '#eef0f3' }, horzLines: { color: '#eef0f3' } },
+  crosshair: { mode: LWC.CrosshairMode.Normal, vertLine: { color: '#b0b7c1', labelBackgroundColor: '#5b6573' }, horzLine: { color: '#b0b7c1', labelBackgroundColor: '#5b6573' } },
+  rightPriceScale: { borderColor: '#dde1e6', scaleMargins: { top: 0.08, bottom: 0.26 } },
+  timeScale: { borderColor: '#dde1e6', timeVisible: true, secondsVisible: true, rightOffset: 3, barSpacing: 6, minBarSpacing: 0.5 },
   localization: { priceFormatter: fmtAxis },
 });
 const candles = chart.addCandlestickSeries({ upColor: '#1ecb81', downColor: '#f6465d', borderVisible: false, wickUpColor: '#1ecb81', wickDownColor: '#f6465d',
@@ -751,7 +751,7 @@ function refreshQuote() {
       const sym = S.side === 'buy' ? t.symbol : 'BNB';
       const f = (v) => (S.side === 'buy' ? K(v) : bnb(v, 6));
       $('#quote').innerHTML = q.out != null ? `
-        ${S.side === 'buy' && S.amtMode === 'pct' ? `<div><span>需花费</span><b>${bnb(amount, 6)} BNB${S.pctNote ? ` <span style="color:#8fb3d9">ⓘ ${esc(S.pctNote)}</span>` : ''}</b></div>` : ''}<div><span>预计获得</span><b>${f(q.out)} ${esc(sym)}</b></div><div><span>最少获得</span><b>${f(q.minOut)} ${esc(sym)}</b></div>
+        ${S.side === 'buy' && S.amtMode === 'pct' ? `<div><span>需花费</span><b>${bnb(amount, 6)} BNB${S.pctNote ? ` <span style="color:#3a6ea5">ⓘ ${esc(S.pctNote)}</span>` : ''}</b></div>` : ''}<div><span>预计获得</span><b>${f(q.out)} ${esc(sym)}</b></div><div><span>最少获得</span><b>${f(q.minOut)} ${esc(sym)}</b></div>
         <div><span>手续费</span><b>${bnb(q.feeBnb, 6)} BNB</b></div><div><span>税率 买/卖</span><b class="${taxHi(t) ? 'r' : ''}">${pctTxt(t.buyFeePct)} / ${pctTxt(t.sellFeePct)}</b></div>${S.side === 'buy' ? (() => { const rt = roundTrip(t, S.amtMode === 'pct' ? S.pctBnb : amount); return rt ? `<div><span>买入再卖出预计损耗</span><b class="${rt.pct >= 5 ? 'r' : ''}">${bnb(rt.cost, 5)} BNB（${rt.pct.toFixed(1)}%）</b></div>` : ''; })() : ''}`
         : '<div><span>预计获得</span><b>—</b></div><div><span>最少获得</span><b>—</b></div><div><span>手续费</span><b>—</b></div><div><span>—</span><b>—</b></div>';
     } catch { /* ignore */ }
@@ -802,7 +802,7 @@ async function submitOrder({ token = S.selected, side = S.side, wallets = [...S.
 
 // 普通提示（不是订单结果）
 // 普通提示：kind='ok' 绿色，'info' 灰蓝色（自动调整金额之类，不是失败）
-function note(text, kind = 'ok') { const el = document.createElement('div'); el.className = 'toast' + (kind === 'info' ? ' info' : ''); el.innerHTML = kind === 'info' ? `<span style="color:#8fb3d9">ⓘ ${esc(text)}</span>` : `<b class="g">${esc(text)}</b>`; $('#toasts').prepend(el); setTimeout(() => el.remove(), 5000); }
+function note(text, kind = 'ok') { const el = document.createElement('div'); el.className = 'toast' + (kind === 'info' ? ' info' : ''); el.innerHTML = kind === 'info' ? `<span style="color:#3a6ea5">ⓘ ${esc(text)}</span>` : `<b class="g">${esc(text)}</b>`; $('#toasts').prepend(el); setTimeout(() => el.remove(), 5000); }
 
 // 把链上 / baw 的英文报错翻成中文
 const ERR_ZH = [
