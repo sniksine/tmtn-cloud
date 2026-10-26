@@ -1,0 +1,71 @@
+/* ===== 手机版布局（宽度 ≤ 760px 时由 mobile.js 给 body 加 .m）===== */
+.mnav { display: none; }
+body.m { height: auto; min-height: 100%; overflow-x: hidden; }
+body.m .topbar { height: auto; flex-wrap: wrap; gap: 6px; padding: 6px 8px; overflow: visible; position: sticky; top: 0; z-index: 40; }
+body.m .topbar .pill:not(#modeBadge):not(.fav-tg):not(#autoSendPill), body.m .follow-x, body.m .donate-btn, body.m .topbar kbd, body.m .brand-s { display: none !important; }
+body.m .brand-logo { width: 24px; height: 24px; }
+body.m .brand-t { font-size: 13px; }
+body.m .topbar .spacer { display: none; }
+body.m .search { order: 10; flex: 1 1 100%; width: auto !important; }
+body.m .viewsw button { padding: 4px 8px; }
+body.m .wallet-sel { margin-left: auto; max-width: 52vw; overflow: hidden; }
+body.m .wallet-sel #wsHandle, body.m .wallet-sel .wtag { display: none; }
+body.m #modeBadge { font-size: 10.5px; padding: 2px 6px; }
+body.m .favbar { overflow-x: auto; }
+
+body.m .layout { display: block; height: auto; padding: 6px 6px 70px; }
+body.m .splitter, body.m .vsplit { display: none !important; }
+body.m .layout > .left, body.m .layout > .center, body.m .layout > .right { display: none; }
+body.m[data-mt="list"] .layout > .left { display: flex; height: calc(100dvh - var(--mTop, 90px) - 70px); max-height: none; }
+body.m[data-mt="chart"] .layout > .center, body.m[data-mt="orders"] .layout > .center { display: flex; }
+body.m[data-mt="chart"] .center > .bottom { display: none; }
+body.m[data-mt="orders"] .center > :not(.bottom) { display: none; }
+body.m[data-mt="trade"] .layout > .right { display: flex; overflow: visible; }
+
+/* 行情：头部 */
+body.m .thead { padding: 10px 10px 0; }
+body.m .th-row { flex-wrap: wrap; gap: 8px; }
+body.m .th-main { flex: 1 1 calc(100% - 70px); }
+body.m .th-title { flex-wrap: wrap; row-gap: 3px; }
+body.m .th-sub { flex-wrap: wrap; row-gap: 2px; }
+body.m .links { flex: 1 1 auto; flex-wrap: wrap; order: 3; }
+body.m .links a, body.m .links button { padding: 4px 8px; font-size: 11.5px; }
+body.m .th-price { order: 2; text-align: left; flex: 1 1 100%; display: flex; align-items: baseline; gap: 8px; }
+body.m .th-price .p { font-size: 17px; }
+/* 行情：K 线 + 活动 */
+body.m .chartrow { flex-direction: column; gap: 8px; }
+body.m .chartbox { flex: none; height: 58vh; min-height: 300px; }
+body.m .ctool { flex-wrap: wrap; gap: 6px; padding: 6px 8px; }
+body.m .ctool .seg { overflow-x: auto; max-width: 100%; }
+body.m .ohlc { flex: 1 1 100%; font-size: 10.5px; }
+body.m .actbox { flex: none !important; height: 320px; }
+/* 记录 */
+body.m .bottom { height: calc(100dvh - var(--mTop, 90px) - 82px); }
+body.m .btabs { overflow-x: auto; flex-wrap: nowrap; white-space: nowrap; }
+body.m .btable { overflow: auto; }
+/* 下单 */
+body.m .right { padding: 10px; }
+body.m .right .seg button, body.m .presets button { min-height: 34px; }
+body.m .right kbd { display: none; }
+/* 战壕 / 持仓 */
+body.m .pulse.trench { grid-template-columns: repeat(3, 100vw) !important; height: calc(100dvh - var(--mTop, 90px) - 58px); overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+body.m .pulse.trench > * { scroll-snap-align: start; min-width: 0; }
+body.m .hold { padding-bottom: 70px; }
+body.m .hold-in { overflow-x: auto; }
+/* 浮层避开底栏 */
+body.m .toasts { left: 8px; right: 8px; bottom: 70px; }
+body.m .toast { max-width: none; min-width: 0; }
+body.m a[href="/_gw/"] { bottom: auto !important; top: auto !important; display: none; }
+body.m .lockmodal .lockbox, body.m .modal-box { max-width: calc(100vw - 20px); }
+
+/* 底部导航 */
+body.m .mnav { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; height: 58px; padding-bottom: env(safe-area-inset-bottom); background: #0b0f14f2; border-top: 1px solid var(--line); backdrop-filter: blur(8px); }
+body.m .mnav button, body.m .mnav a { flex: 1; background: none; border: 0; color: var(--muted); font: 600 11.5px var(--sans); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; }
+body.m .mnav i { font-style: normal; font-size: 17px; line-height: 1; }
+body.m .mnav .on { color: #f0b90b; }
+body.m:not([data-mv="trade"]) .mnav [data-mt] { opacity: .55; }
+/* 下单页顶部显示当前代币（只要标题行，不要指标块） */
+body.m[data-mt="trade"] .layout > .center { display: flex; margin-bottom: 8px; }
+body.m[data-mt="trade"] .center > :not(.thead) { display: none; }
+body.m[data-mt="trade"] .thead .stats, body.m[data-mt="trade"] .thead .links, body.m[data-mt="trade"] .thead .th-sub { display: none; }
+body.m[data-mt="trade"] .thead { padding-bottom: 8px; }
