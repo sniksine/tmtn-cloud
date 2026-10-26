@@ -59,10 +59,10 @@ body.m a[href="/_gw/"] { bottom: auto !important; top: auto !important; display:
 body.m .lockmodal .lockbox, body.m .modal-box { max-width: calc(100vw - 20px); }
 
 /* 底部导航 */
-body.m .mnav { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; height: 58px; padding-bottom: env(safe-area-inset-bottom); background: #0b0f14f2; border-top: 1px solid var(--line); backdrop-filter: blur(8px); }
+body.m .mnav { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; height: 58px; padding-bottom: env(safe-area-inset-bottom); background: #f4f6f9f2; border-top: 1px solid var(--line); backdrop-filter: blur(8px); }
 body.m .mnav button, body.m .mnav a { flex: 1; background: none; border: 0; color: var(--muted); font: 600 11.5px var(--sans); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; }
 body.m .mnav i { font-style: normal; font-size: 17px; line-height: 1; }
-body.m .mnav .on { color: #f0b90b; }
+body.m .mnav .on { color: #cd9e09; }
 body.m:not([data-mv="trade"]) .mnav [data-mt] { opacity: .55; }
 /* 下单页顶部显示当前代币（只要标题行，不要指标块） */
 body.m[data-mt="trade"] .layout > .center { display: flex; margin-bottom: 8px; }
